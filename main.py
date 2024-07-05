@@ -1,6 +1,6 @@
 from pytube import YouTube
 import os
-from moviepy.editor import AudioClip, VideoClip
+from moviepy.editor import AudioFileClip, VideoFileClip
 
 class Downloader():
     def __init__(self):
@@ -34,19 +34,25 @@ class Downloader():
         return list
 
     def searching_in_streams(self, response, format):
+        """
+        Will take a list with all the objects and will sort them
+        :param response:
+        :param format:
+        :return:
+        """
         temp_list = {}
         if format == "mp4":
             stream = YouTube(response).streams.filter(file_extension="mp4")
         elif format == "mp3":
             stream = YouTube(response).streams.filter(only_audio=True)
 
-        for element in stream:
+        for element in stream:  #Creation of the dict with the quality : id
             if format == "mp3" and element.abr:
                 temp_list[element.abr] = element.itag
             elif format == "mp4" and element.resolution:
                 temp_list[element.resolution] = element.itag
 
-        if format == "mp3":
+        if format == "mp3":  # Will use the function fusion to sort the different ints (quality)
             a = [i[:-4] for i in temp_list.keys()]
             sorted_audio = [i + "kbps" for i in self.fusion(a)]
             return temp_list, sorted_audio
@@ -63,37 +69,29 @@ class Downloader():
         elif format == "mp3":
             sorted_audio = self.searching_in_streams(response, format)
             return sorted_audio
-    """
-    def download(self, link, id):
-        stream_video = YouTube(link).streams.get_by_itag(id)
-        stream_audio = YouTube(link).streams.filter(only_audio=True).first()
 
-        stream_video.download(os.path.join(os.path.expanduser("~"), "Downloads"))
-        stream_audio.download(os.path.join(os.path.expanduser("~"), "Downloads"))
 
-        video_path = os.path.join(os.path.expanduser("~"), "Downloads", stream_video.title)
-        audio_filepath = os.path.join(os.path.expanduser("~"), "Downloads", stream_audio.title)
 
-        os.rename(video_path,"video.mp4")
-        os.rename(audio_filepath, "audio.webm")
-
-        input_video = VideoClip("video.mp4")
-        input_audio = AudioClip("audio.webm")
-        
-        final = input_video.set_audio(input_audio).write_videofile("output.mp4")
-        os.remove("video.mp4")
-        os.remove("audio.webm")"""
     def download(self, link, id):
         stream_video = YouTube(link).streams.get_by_itag(id)
         stream_audio = YouTube(link).streams.filter(mime_type="audio/webm", only_audio=True).first()
 
-        stream_video.download(os.path.join(os.path.expanduser("~"), "Downloads"))
-        stream_audio.download(os.path.join(os.path.expanduser("~"), "Downloads"))
+        destination = input("Enter the destination (leave blank for current directory): ")
+        out_file = stream_video.download(output_path=destination)
+        base, ext = os.path.splitext(out_file)
+        new_file = 'video' + '.mp4'
+        os.rename(out_file, new_file)
 
+        out_file = stream_audio.download(output_path=destination)
+        new_file = "audio" + '.webm'
+        os.rename(out_file, new_file)
 
+        input_video = VideoFileClip("video.mp4")
+        input_audio = AudioFileClip("audio.webm")
 
-
-
+        final = input_video.set_audio(input_audio).write_videofile(base+".mp4")
+        os.remove("video.mp4")
+        os.remove("audio.webm")
 
     def main(self):
         link = input("Hi, this uses pytube to download youtube videos. Enter the video link: ")
