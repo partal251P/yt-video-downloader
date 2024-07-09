@@ -1,6 +1,6 @@
 def check_link(link):
     while True:
-        if not len(link) in [43]:
+        if not len(link) in [43, 76]:
             link = input("Error, you entered a invalid link "
                          "(you maybe entered a link to a playlist insteed of a single video). "
                          "Enter the correct link:\n>>")

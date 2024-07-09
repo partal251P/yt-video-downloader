@@ -8,8 +8,8 @@ def fusion(list):
         left = list[:len(list) // 2]
         right = list[len(list) // 2:]
 
-        self.fusion(left)
-        self.fusion(right)
+        fusion(left)
+        fusion(right)
 
         i, j, k = 0, 0, 0
         while i < len(left) and j < len(right):
