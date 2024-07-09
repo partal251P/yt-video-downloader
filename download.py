@@ -1,6 +1,7 @@
 from pytube import YouTube, Playlist
 from moviepy.editor import VideoFileClip, AudioFileClip, concatenate_videoclips
 import os
+
 def download(link, format, id, destination):
     """
     Downloads a video in mp4 or in mp3
@@ -15,7 +16,12 @@ def download(link, format, id, destination):
         stream_audio = YouTube(link).streams.get_by_itag(id).download(destination)
         video_clip = VideoFileClip("video.mp4")
         audio_clip = AudioFileClip("audio.mp3")
+
+        title_video = YouTube(link).title()
+        file_path = os.destination.join(destination, title_video)
+        os.remove(file_path)
         final_clip = video_clip.set_audio(audio_clip)
+
     else:
         stream_audio = YouTube(link).streams.get_by_itag(id).download(destination)
 
