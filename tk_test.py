@@ -3,8 +3,7 @@ from tkinter import messagebox
 import quality
 import download
 
-
-
+from pytube import YouTube
 class MyGUI:
     def __init__(self):
         self.choice = 0
@@ -43,8 +42,6 @@ class MyGUI:
         self.check.pack(padx=10, pady=10)  # checkbox mp4
 
 
-
-
         self.button = tk.Button(self.window, text="Download", font=('Arial', 18), command=self.play_or_not)
         self.button.pack(padx=10, pady=10)
 
@@ -58,7 +55,7 @@ class MyGUI:
     def play_or_not(self):
         """
         Permet de vérifier les valeurs mises
-        :return: None
+        :return:
         """
         #est ce que checkbox est checker?
         if self.check_state_mp3.get() == 1 and self.check_state_mp4.get() == 1:  # Vérifie que mp3 et  mp4  ne sont pas choisi en meme temps
@@ -86,6 +83,10 @@ class MyGUI:
                 self.choice = 1
                 self.quality_list = quality.quality_check(self.link, self.format)
                 self.ouvrir_dialogue()
+
+
+
+
 
 
     def on_closing(self):
@@ -118,7 +119,6 @@ class MyGUI:
 
                 return
         self.valider_qualite()
-
     def valider_qualite(self):
         # Récupération de la valeur entrée par l'utilisateur
         self.quality_choosen = self.entry_qualite.get()

@@ -2,7 +2,7 @@ from pytube import YouTube
 import mergesort
 
 
-def searching_in_streams( response, format):
+def searching_in_streams(response, format):
     """
     Will take a list with all the objects and will sort them
     :param response: str()
